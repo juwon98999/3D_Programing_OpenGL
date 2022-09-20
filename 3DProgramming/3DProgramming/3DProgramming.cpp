@@ -60,8 +60,8 @@ int main(void)
         glBegin(GL_LINE_STRIP);
         
         for (int i = 0; i < 360; i++) {
-            glVertex3f(glm::sin(glm::radians(90.0f) + Line), glm::cos(glm::radians(90.0f) + Line), 0.0f);
-            Line += 0.1f;
+            glVertex3f(glm::sin(glm::radians(90.0f + Line)), glm::cos(glm::radians(90.0f + Line)), 0.0f);
+            Line += 1.0f;
         }
 
         glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
