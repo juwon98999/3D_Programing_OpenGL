@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-
+#pragma comment(lib, "freeglut.lib")
 #pragma comment(lib, "OpenGL32")
 
 static void error_callback(int error, const char* description)
@@ -23,7 +23,9 @@ int main(void)
     glfwSetErrorCallback(error_callback);
     if (!glfwInit())
         exit(EXIT_FAILURE);
-    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+    window = glfwCreateWindow(800, 720, "Simple example", NULL, NULL);
+    
+
     if (!window)
     {
         glfwTerminate();
@@ -38,41 +40,80 @@ int main(void)
 
     while (!glfwWindowShouldClose(window))
     {
+
         float ratio;
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
         ratio = width / (float)height;
 
-        ////90도와 같이 각도로 연산하고 싶으면
-        ////glm의 삼각함수는 radian 형식으로 입력을 받기 때문에 변환해서 넣어주어야한다.
-        //glm에 있는 sin 과 cos 함수를 활용하여 OpenGL의 line strip으로 화면에 해당하는 2차원 공간상에서 반지름이 1인 원을 그려보도록 하자.
+        float r = 0.0f;
+        int max_angle = 362;
+        float radius = 0.5f;
 
-        //float test1 = glm::sin(glm::radians(90.0f));
-        //float test2 = glm::cos(glm::radians(45.0f));
-        //std::cout << test1 << "\n";
-        //std::cout << test2 << "\n";
-
-        float Line = 0;
+        double angle = 3.141592 / 180;
         
-        glClearColor(.0f, 0.0f, 0.0f, 0.1f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBegin(GL_LINE_STRIP);
-        
-        for (int i = 0; i < 360; i++) {
-            glVertex3f(glm::sin(glm::radians(90.0f) + Line), glm::cos(glm::radians(90.0f) + Line), 0.0f);
-            Line += 0.1f;
-        }
+       
 
-        glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-        glVertex3f(0.0f, 1.0f, 0.0f);
-        glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-        glVertex3f(1.0f, -1.0f, 0.0f);
-        glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-        glVertex3f(-1.0f, -1.0f, 0.0f);
-        glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-        glVertex3f(0.0f, 1.0f, 0.0f);
+        glBegin(GL_LINE_STRIP);
+
+        for (int i = 0; i < max_angle; i++) {
+            glVertex3f(radius * glm::sin(glm::radians(90.0f) + r), radius * glm::cos(glm::radians(90.0f) + r), 0);
+            r += 0.1f;
+        }
         glEnd();
+
+        /*glColor4f(0.0f, 0.0f, 0.0f, 1.0f);*/
+
+        glPointSize(10.0f);
+        glBegin(GL_POINTS);
+        glVertex2f(radius * glm::cos(0.0f * angle), radius * glm::sin(0.0f * angle));
+        glVertex2f(radius * glm::cos(72.0f * angle), radius * glm::sin(72.0f * angle));
+        glVertex2f(radius * glm::cos(144.0f * angle), radius * glm::sin(144.0f * angle));
+        glVertex2f(radius * glm::cos(216.0f * angle), radius * glm::sin(216.0f * angle));
+        glVertex2f(radius * glm::cos(288.0f * angle), radius * glm::sin(288.0f * angle));
+        
+        glEnd();
+
+
+        glBegin(GL_LINE_STRIP);
+
+        glVertex2f(radius * glm::cos(0.0f * angle), radius * glm::sin(0.0f * angle));
+        glVertex2f(radius * glm::cos(144.0f * angle), radius * glm::sin(144.0f * angle));
+        glVertex2f(radius * glm::cos(288.0f * angle), radius * glm::sin(288.0f * angle));
+        glVertex2f(radius * glm::cos(72.0f * angle), radius * glm::sin(72.0f * angle));
+        glVertex2f(radius * glm::cos(216.0f * angle), radius * glm::sin(216.0f * angle));
+        glVertex2f(radius * glm::cos(360.0f * angle), radius * glm::sin(360.0f * angle));
+        
+
+        glEnd();
+
+        glLoadIdentity();
+        glPushMatrix();
+        glTranslatef(5.0f, 0.0f, -10.0f);
+        glScalef(1.0f, 1.0f, 1.0f);
+        glRotatef(30.0f, 1.0f, 0.0f, 0.0f);
+        glPopMatrix();
+        
+
+        double time = 0.0f;
+        
+        time = glfwGetTime();
+
+
+        static float step = 0.1f;
+
+        if (radius >= 10.0f) {
+            step -= step;
+        }
+        else if (radius <= 0.0f) {
+            step = -step;
+        }
+        
+        
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
