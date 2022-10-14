@@ -2,7 +2,6 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-#pragma comment(lib, "freeglut.lib")
 #pragma comment(lib, "OpenGL32")
 
 static void error_callback(int error, const char* description)
